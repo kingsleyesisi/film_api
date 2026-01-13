@@ -1,6 +1,12 @@
 # Star Wars API
 
-A Django REST API for Star Wars films with caching, comments, and robust error handling.
+![CI](https://github.com/kingsleyesisi/film_api/workflows/CI/badge.svg)
+![Deploy](https://github.com/kingsleyesisi/film_api/workflows/Deploy/badge.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+A production-ready Django REST API for Star Wars films with caching, comments, and robust error handling.
+
+**🚀 [Live Demo](https://film-api-ten.vercel.app)** | **📚 [API Docs](https://film-api-ten.vercel.app/api/schema/swagger-ui/)**
 
 ## Features
 
@@ -10,6 +16,11 @@ A Django REST API for Star Wars films with caching, comments, and robust error h
 - ✅ **Background Sync** - Sync films from SWAPI
 - ✅ **Flexible URLs** - Works with or without trailing slashes
 - ✅ **Robust Error Handling** - Consistent error responses across all endpoints
+- ✅ **Docker Support** - Containerized for easy deployment
+- ✅ **CI/CD Pipeline** - Automated testing and deployment
+- ✅ **Production Ready** - Environment-based configuration, security headers, static file serving
+- ✅ **Health Check** - Monitoring endpoint for cloud platforms
+- ✅ **OpenAPI/Swagger** - Interactive API documentation
 
 ## Quick Start
 
@@ -43,6 +54,73 @@ The cache will automatically populate on startup with console output:
 🚀 Populating cache on startup...
 ✅ Cached 6 films
 ```
+
+---
+
+## Docker Quick Start
+
+Run the entire stack with Docker Compose:
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd starwars_api
+
+# Start with Docker Compose (includes PostgreSQL)
+docker-compose up
+
+# The API will be available at http://localhost:8000
+```
+
+Or build and run with Docker only:
+
+```bash
+# Build the image
+docker build -t starwars-api .
+
+# Run the container
+docker run -p 8000:8000 \
+  -e SECRET_KEY="your-secret-key" \
+  -e DEBUG="False" \
+  starwars-api
+```
+
+---
+
+## Deployment
+
+Deploy to your favorite cloud platform in minutes:
+
+### Railway (Recommended)
+```bash
+npm i -g @railway/cli
+railway login
+railway init
+railway up
+```
+
+### Render / Heroku
+- Connect your Git repository
+- Add PostgreSQL database
+- Set environment variables
+- Deploy!
+
+**📖 [Complete Deployment Guide](docs/DEPLOYMENT.md)** - Step-by-step instructions for Railway, Render, Heroku, AWS, and DigitalOcean.
+
+---
+
+## Environment Variables
+
+Create a `.env` file for local development (see `.env.example`):
+
+```bash
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_URL=postgresql://user:pass@localhost:5432/starwars_db  # Optional
+```
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for production environment setup.
 
 ---
 
@@ -326,34 +404,6 @@ POST /api/comments/ → Cache invalidated
 GET /api/films/ → Cache miss → DB query (shows updated comment count)
 ```
 
----
-
-## Development
-
-### Project Structure
-
-```
-starwars_api/
-├── film/
-│   ├── models.py              # Film, FilmCache, Comments models
-│   ├── views.py               # API views with caching
-│   ├── serializers.py         # DRF serializers
-│   ├── urls.py                # URL routing
-│   ├── utils.py               # SWAPI fetching utilities
-│   └── management/commands/
-│       ├── sync_films.py              # Sync from SWAPI
-├── requirements.txt           # Python dependencies
-└── README.md                  # This file
-```
-
-### Management Commands
-
-```bash
-# Sync films from SWAPI
-python manage.py sync_films
-```
-
----
 
 ## Troubleshooting
 
@@ -386,11 +436,42 @@ This is intentional for cache pre-population and doesn't affect functionality.
 
 ## Technologies
 
+### Core
 - **Django** 5.2+ - Web framework
 - **Django REST Framework** - API framework
-- **django-cors-headers** - CORS support
-- **drf-spectacular** - API documentation
+- **drf-spectacular** - OpenAPI/Swagger documentation
 - **LocMemCache** - In-memory caching (no Redis needed)
+
+### Production
+- **Gunicorn** - WSGI HTTP server
+- **WhiteNoise** - Static file serving
+- **PostgreSQL** - Production database (via psycopg2)
+- **Docker** - Containerization
+- **GitHub Actions** - CI/CD pipeline
+
+### Supported Platforms
+- Railway, Render, Heroku
+- AWS, DigitalOcean, Google Cloud
+- Any Docker-compatible hosting
+
+---
+
+## API Documentation
+
+Interactive API documentation is available at:
+- **Swagger UI**: `/api/schema/swagger-ui/`
+- **OpenAPI Schema**: `/api/schema/`
+
+---
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add/update tests
+5. Submit a pull request
 
 ---
 

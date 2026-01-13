@@ -1,6 +1,8 @@
 
+
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
+from django.db import connection
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -328,5 +330,34 @@ class CommentCreateView(APIView):
             )
 
 
+class HealthCheckView(APIView):
+    """Health check endpoint for monitoring."""
+    
+    @extend_schema(
+        summary="Health check",
+        description="Check if the API is running and database is accessible.",
+        responses={
+            200: OpenApiTypes.OBJECT,
+            503: OpenApiTypes.OBJECT,
+        },
+        tags=['System']
+    )
+    def get(self, request):
+        """Check API health and database connectivity."""
+        try:
+            # Test database connection
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1")
+            
+            return Response({
+                'status': 'healthy',
+                'database': 'connected'
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'status': 'unhealthy',
+                'database': 'disconnected',
+                'error': str(e)
+            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
      
